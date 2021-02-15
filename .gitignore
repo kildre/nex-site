@@ -1,1 +1,5 @@
 node_modules
+
+
+# prettier config
+.prettier

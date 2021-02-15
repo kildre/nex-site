@@ -1,11 +1,16 @@
 import express from "express";
-import path from "path";
+import path, { dirname } from "path";
 import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// eslint-disable-next-line no-param-reassign, no-underscore-dangle
+const __dirname = dirname(fileURLToPath(import.meta.url));
+// const __dirname = fileURLToPath(import.meta.url);
+// const _dirname = path.dirname(_filename);
 const app = express();
 const port = 3000;
+
+app.set("views engine", "ejs");
+app.set("views", path.join("./views"));
 
 app.use(express.static(path.join(__dirname, "./static")));
 
@@ -18,5 +23,6 @@ app.get("/", (req, res) => {
 });
 
 app.listen(port, () => {
+  // eslint-disable-next-line
   console.log(`Express Server Listening on port: ${port}`);
 });
