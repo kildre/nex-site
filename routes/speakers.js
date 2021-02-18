@@ -1,22 +1,19 @@
 const express = require("express");
 
-
 const router = express.Router();
 
-
-
 module.exports = (params) => {
-  const { speakersService }  = params;
+  const { speakersService } = params;
 
-  router.get("/", async (req, res) => {
+  router.get("/", async (request, response) => {
     const speakers = await speakersService.getList();
-    return res.json(speakers)
+    console.log(speakers);
+    response.render("layout", { pageTitle: "Speakers", template: "speakers", speakers });
   });
-  
-  router.get("/:shortname", (req, res) => {
-    return res.send(`Details page of ${req.params.shortname}`)
-  });
+
+  router.get("/:shortname", (request, response) =>
+    response.send(`Details page of ${request.params.shortname}`)
+  );
 
   return router;
-}
-    
+};

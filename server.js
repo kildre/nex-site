@@ -10,9 +10,6 @@ const speakersService = new SpeakerService("./data/speakers.json");
 
 const routes = require("./routes");
 
-
-
-
 // eslint-disable-next-line no-param-reassign, no-underscore-dangle
 // const __dirname = dirname(fileURLToPath(import.meta.url));
 // const __dirname = fileURLToPath(import.meta.url);
@@ -20,20 +17,32 @@ const routes = require("./routes");
 const app = express();
 const port = 3000;
 
-app.set("trust proxy", 1)
+app.set("trust proxy", 1);
 
 app.use(
   cookieSession({
-   name: "session",
-   keys: ["ddfer43erw", "445rresdfgw21"]
-}))
+    name: "session",
+    keys: ["ddfer43erw", "445rresdfgw21"],
+  })
+);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "./views"));
 
+app.locals.siteName = "NEx-SITE";
+
 app.use(express.static(path.join(__dirname, "./static")));
 
-app.use("/", routes({feedbackService, speakersService}));
+app.use(async (request, response, next) => {
+  try {
+    const names = await speakersService.getNames();
+    response.locals.speakerNames = names;
+    return next();
+  } catch (e) {
+    return next(e);
+  }
+});
+app.use("/", routes({ feedbackService, speakersService }));
 
 app.listen(port, () => {
   // eslint-disable-next-line
